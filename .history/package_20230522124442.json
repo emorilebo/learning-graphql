@@ -1,0 +1,29 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "":"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emorilebo/learning-graphql.git"
+  },
+  "keywords": [
+    "GraphQl",
+    "ChatAPP",
+    "Godfrey",
+    "Emori"
+  ],
+  "author": "Godfrey Lebo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emorilebo/learning-graphql/issues"
+  },
+  "homepage": "https://github.com/emorilebo/learning-graphql#readme",
+  "dependencies": {
+    "graphql": "^16.6.0"
+  }
+}
