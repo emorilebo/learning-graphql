@@ -9,16 +9,18 @@ const typeDefs = `#graphql
   }
 
   type User {
-    id: ID
-    firstName: String
-    lastName: String
-    email: String
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
     password: String
+    todos:[Todo]
   }
 
   type Query {
     books: [Book]
   }
+
   type Query {
     users: [User]
     user(id:ID!):User
@@ -29,6 +31,11 @@ const typeDefs = `#graphql
     lastName:String!
     email:String!
     password:String!
+  }
+
+  type Todo{
+    title:String
+    by:ID
   }
 
   type Mutation{
@@ -54,6 +61,21 @@ const users = [
     password: "12345",
   },
 ];
+
+const Todos = [
+    {
+        title: "Buy Books",
+        by: "ssid",
+    },
+    {
+        title: "Write Codes",
+        by: "ssad",
+    },
+    {
+        title: "Buy Books",
+        by: "ssid",
+    }
+]
 
 const books = [
   {
