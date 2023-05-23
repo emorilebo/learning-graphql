@@ -3,22 +3,13 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { randomUUID } from "crypto";
 
 const typeDefs = `#graphql
-  type Book {
-    title: String
-    author: String
-  }
-
+ 
   type User {
     id: ID!
     firstName: String!
     lastName: String!
     email: String!
     password: String
-    todos:[Todo]
-  }
-
-  type Query {
-    books: [Book]
   }
 
   type Query {
@@ -33,13 +24,8 @@ const typeDefs = `#graphql
     password:String!
   }
 
-  type Todo{
-    title:String
-    by:ID
-  }
-
   type Mutation{
-    createUser(userNew:UserInput!):User
+    
   }
 
 
@@ -62,57 +48,12 @@ const users = [
   },
 ];
 
-const Todos = [
-    {
-        title: "Buy Books",
-        by: "ssid",
-    },
-    {
-        title: "Write Codes",
-        by: "ssad",
-    },
-    {
-        title: "Buy Books",
-        by: "ssid",
-    }
-]
-
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-  {
-    title: "Power of Concentration",
-    author: "Theron Q Dumount",
-  },
-];
-
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
-  Query: {
-    books: () => books,
-    users: () => users,
-    user: (parent, args, context) => {
-      console.log(args.id);
-      return users.find((item) => item.id == args.id);
-    },
-  },
-  Mutation: {
-    createUser: (_, { userNew }) => {
-      const newUser = {
-        id: randomUUID(),
-        ...userNew,
-      };
-      users.push(newUser);
-      return newUser;
-    },
-  },
+  Query: {},
+
+  Mutation: {},
 };
 
 // The ApolloServer constructor requires two parameters: your schema
@@ -120,6 +61,9 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: {
+    userLoggedIn: false,
+  },
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
