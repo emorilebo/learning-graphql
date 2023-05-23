@@ -1,32 +1,8 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { randomUUID } from "crypto";
+import typeDefs from "./typeDef.js";
+import resolvers from "./resolvers.js";
 
-
-const users = [
-  {
-    id: "ssid",
-    firstName: "Godfrey",
-    lastName: "Lebo",
-    email: "godfreylebo@gmail.com",
-    password: "12345",
-  },
-  {
-    id: "ssad",
-    firstName: "Francis",
-    lastName: "Ekpan",
-    email: "francisekpan@gmail.com",
-    password: "12345",
-  },
-];
-
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
-const resolvers = {
-  Query: {},
-
-  Mutation: {},
-};
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.

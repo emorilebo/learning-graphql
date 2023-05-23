@@ -5,26 +5,26 @@ const typeDefs = `#graphql
 type Query {
     users: [User]
     user(id:ID!):User
-  }
+}
 
-  input UserInput{
+input UserInput {
     firstName:String!
     lastName:String!
     email:String!
     password:String!
-  }
-
-  type Mutation{
-    
-  }
+}
+  
+type Mutation{
+    signupUser(userNew:UserInput):User
+}
  
-  type User {
+type User {
     id: ID!
     firstName: String!
     lastName: String!
     email: String!
     password: String
-  }
+}
 
  
 `;
