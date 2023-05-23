@@ -2,34 +2,6 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { randomUUID } from "crypto";
 
-const typeDefs = `#graphql
- 
-  type User {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    password: String
-  }
-
-  type Query {
-    users: [User]
-    user(id:ID!):User
-  }
-
-  input UserInput{
-    firstName:String!
-    lastName:String!
-    email:String!
-    password:String!
-  }
-
-  type Mutation{
-    
-  }
-
-
-`;
 
 const users = [
   {
@@ -60,10 +32,8 @@ const resolvers = {
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
-  context: {
-    userLoggedIn: false,
-  },
+  resolvers
+  
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
