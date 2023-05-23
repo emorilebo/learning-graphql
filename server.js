@@ -1,25 +1,59 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import { randomUUID } from "crypto";
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
 const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
     title: String
     author: String
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type User {
+    id: ID
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+  }
+
   type Query {
     books: [Book]
   }
+  type Query {
+    users: [User]
+    user(id:ID!):User
+  }
+
+  input UserInput{
+    firstName:String!
+    lastName:String!
+    email:String!
+    password:String!
+  }
+
+  type Mutation{
+    createUser(userNew:UserInput!):User
+  }
+
+
 `;
+
+const users = [
+  {
+    id: "ssid",
+    firstName: "Godfrey",
+    lastName: "Lebo",
+    email: "godfreylebo@gmail.com",
+    password: "12345",
+  },
+  {
+    id: "ssad",
+    firstName: "Francis",
+    lastName: "Ekpan",
+    email: "francisekpan@gmail.com",
+    password: "12345",
+  },
+];
 
 const books = [
   {
@@ -30,6 +64,10 @@ const books = [
     title: "City of Glass",
     author: "Paul Auster",
   },
+  {
+    title: "Power of Concentration",
+    author: "Theron Q Dumount",
+  },
 ];
 
 // Resolvers define how to fetch the types defined in your schema.
@@ -37,6 +75,21 @@ const books = [
 const resolvers = {
   Query: {
     books: () => books,
+    users: () => users,
+    user: (parent, args, context) => {
+      console.log(args.id);
+      return users.find((item) => item.id == args.id);
+    },
+  },
+  Mutation: {
+    createUser: (_, { userNew }) => {
+      const newUser = {
+        id: randomUUID(),
+        ...userNew,
+      };
+      users.push(newUser);
+      return newUser;
+    },
   },
 };
 
