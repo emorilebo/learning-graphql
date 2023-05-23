@@ -2,8 +2,10 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 // import {ApolloError, AuthenticationError} from 'apollo-server'
 import { ApolloServer } from "@apollo/server"
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
+console.log(process.env.JWT_SECRET)
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
@@ -20,7 +22,7 @@ const resolvers = {
             ...userNew,
             password: hashedPassword
           }
-        })
+        }) 
         return newUser
       },
 
@@ -28,7 +30,10 @@ const resolvers = {
         const user = await prisma.user.findUnique({where:{email:userSignin.email}})
         if(!user) throw new Error(`User ${userSignin.email} doesnt exist`)
         const doMatch = await bcrypt.compare(userSignin.password, user.password)
-        f(!user) throw new Error(`User ${userSignin.email} pr password is invalid`)
+        if(!doMatch) throw new Error(`User ${userSignin.email} pr password is invalid`)
+        const token  = jwt.sign({userId:user.id}, process.env.JWT_SECRET)
+        return {token}
+
       },
     },
   };
