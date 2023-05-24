@@ -8,7 +8,10 @@ import resolvers from "./resolvers.js";
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context:()=>{
+
+  }
   
 });
 

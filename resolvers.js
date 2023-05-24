@@ -10,7 +10,12 @@ console.log(process.env.JWT_SECRET)
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
-    Query: {},
+    Query: {
+      users:async()=>{
+        const users = await prisma.user.findMany()
+        return users
+      }
+    },
   
     Mutation: {
       signupUser:async(_,{userNew})=>{
