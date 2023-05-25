@@ -5,14 +5,23 @@ import { ApolloServer } from "@apollo/server"
 import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
-console.log(process.env.JWT_SECRET)
 
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
+
 const resolvers = {
     Query: {
-      users:async()=>{
-        const users = await prisma.user.findMany()
+      users: async (_, args, {userId})=>{
+        console.log(userId) 
+        if(!userId) throw new Error("You must be loggied in")
+        const users = await prisma.user.findMany({
+          orderBy: {
+            createdAt:"desc"
+          },
+          where:{
+            id:{
+              not:userId
+            }
+          }
+        })
         return users
       }
     },
@@ -31,14 +40,14 @@ const resolvers = {
         return newUser
       },
 
-      signinUser:async(_,{userSignin})=>{
+      signinUser:async (_,{userSignin})=>{
         const user = await prisma.user.findUnique({where:{email:userSignin.email}})
         if(!user) throw new Error(`User ${userSignin.email} doesnt exist`)
         const doMatch = await bcrypt.compare(userSignin.password, user.password)
-        if(!doMatch) throw new Error(`User ${userSignin.email} pr password is invalid`)
+        if(!doMatch) throw new Error(`User ${userSignin.email} or password is invalid`)
         const token  = jwt.sign({userId:user.id}, process.env.JWT_SECRET)
+        console.log(token)
         return {token}
-
       },
     },
   };
