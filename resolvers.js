@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
-// import {ApolloError, AuthenticationError} from 'apollo-server'
+// import {ApolloError, AuthenticationError, gql} from 'apollo-server'
 import { ApolloServer } from "@apollo/server"
 import jwt from 'jsonwebtoken'
 
@@ -9,9 +9,10 @@ const prisma = new PrismaClient()
 
 const resolvers = {
     Query: {
-      users: async (_, args, {userId})=>{
-        console.log(userId) 
-        if(!userId) throw new Error("You must be loggied in")
+      users: async (_, args, context)=>{
+        const {userId} = context
+        console.log(context) 
+        if(!userId) throw new Error("You must be logged in")
         const users = await prisma.user.findMany({
           orderBy: {
             createdAt:"desc"
@@ -40,12 +41,12 @@ const resolvers = {
         return newUser
       },
 
-      signinUser:async (_,{userSignin})=>{
+      signinUser:async (parent,{userSignin},context)=>{
         const user = await prisma.user.findUnique({where:{email:userSignin.email}})
-        if(!user) throw new Error(`User ${userSignin.email} doesnt exist`)
+        if(!user) throw new Error(`User ${userSignin.email} does not exist`)
         const doMatch = await bcrypt.compare(userSignin.password, user.password)
         if(!doMatch) throw new Error(`User ${userSignin.email} or password is invalid`)
-        const token  = jwt.sign({userId:user.id}, process.env.JWT_SECRET)
+        const token  = jwt.sign({userId: user.id}, process.env.JWT_SECRET)
         console.log(token)
         return {token}
       },

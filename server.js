@@ -5,18 +5,23 @@ import resolvers from "./resolvers.js";
 import jwt from 'jsonwebtoken'
 
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
+
 const server = new ApolloServer({
   typeDefs, 
   resolvers,
   context:({req})=>{
     console.log(req.headers)
-   const {authorization} =  req.headers
-   if(authorization){
-    const {userId} = jwt.verify(authorization, process.env.JWT_SECRET)
-    console.log(userId)
-    return {userId}
+    const {authorization} =  req.headers
+    if(authorization){
+      try{
+        const {userId} = jwt.verify(authorization, process.env.JWT_SECRET)
+        return {userId}
+      }catch(error){
+        console.error('Token verification error:', error);
+      throw new Error('Invalid or expired token');
+ 
+      }
+      
    }
   }
   
@@ -27,3 +32,7 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`🚀  Server ready at: ${url}`);
+
+// server.listen().then(({url})=>{
+//   console.log(`Server is readt at ${url}`);
+// })

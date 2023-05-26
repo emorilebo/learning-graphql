@@ -1,4 +1,3 @@
-// import { ApolloServer } from "@apollo/server";
 
 const typeDefs = `#graphql
 
@@ -23,7 +22,7 @@ type Token{
 }
   
 type Mutation{
-    signupUser(userNew:UserInput):User
+    signupUser(userNew:UserInput!):User
     signinUser(userSignin:UserSigninInput!):Token
 }
  
@@ -37,6 +36,5 @@ type User {
 
  
 `;
-
 
 export default typeDefs
